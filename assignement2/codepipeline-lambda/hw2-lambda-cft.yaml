@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  IndexLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: index-photos-new
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.9
+      CodeUri: ./index-photos
+      Description: ''
+      MemorySize: 128
+      Timeout: 900
+      Role: 'arn:aws:iam::251064567471:role/service-role/index-photos-role-qn7la9fu'
+      Events:
+        BucketEvent1:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: b2indexphotos
+            Events:
+              - 's3:ObjectCreated:Put'
+  b2indexphotos:
+    Type: 'AWS::S3::Bucket'
+    BucketName: b2indexphotos-new
+  SearchLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: search-photos-new
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.9
+      CodeUri: ./search-photos
+      Description: ''
+      MemorySize: 128
+      Timeout: 900
+      Role: 'arn:aws:iam::251064567471:role/service-role/search-photos-role-af474g8c'
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /search
+            Method: GET
+        Api2:
+          Type: Api
+          Properties:
+            Path: /MyResource
+            Method: ANY
+            
+           
